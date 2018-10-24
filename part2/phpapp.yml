@@ -3,8 +3,8 @@
 - file:
     location: "/tmp/x"
     permissions: "777"
-    owner: "richardduarte"
-    group: "staff"
+    owner: "root"
+    group: "root"
     content: '<?php
       header("Content-Type: text/plain");
       echo "Hello, world!\n";'

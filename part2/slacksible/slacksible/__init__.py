@@ -1,6 +1,10 @@
 import click
 import yaml
-from subprocess import call
+import os
+import pwd
+import grp
+from stat import *
+from subprocess import call, check_output
 
 @click.command()
 @click.option("--conf", help="Config file to read in", required=True)
@@ -21,20 +25,55 @@ def entry(conf, apply):
       elif step.keys()[0] == 'file':
         destroy_file(step.values()[0])
 
-def check_pkg_exists(name):
-  call(["apt", "-qq", "list", "nano"])
+def pkg_exists(name):
+  """Returns true if package is installed, false otherwise"""
+  return not check_output(["apt", "-qq", "list", name]) == ""
+
+def restart_service(names):
+  for name in names:
+    call(["sudo", "service", name, "restart"])
 
 def install_pkg(config):
-  call(["sudo", "apt-get", "install", "-y", config["name"]])
+  if not pkg_exists(config["name"]):
+    call(["sudo", "apt-get", "install", "-y", config["name"]])
 
 def destroy_pkg(config):
-  call(["sudo", "apt-get", "remove", "-y", config["name"]])
+  if pkg_exists(config["name"]):
+    call(["sudo", "apt-get", "remove", "-y", config["name"]])
+
+def file_needs_changing(config):
+  #Check if file exists
+  if not os.path.isfile(config["location"]):
+    return True
+  #Check file permissions
+  if not oct(os.stat(config["location"])[ST_MODE])[-3:] == config["permissions"]:
+    return True
+  #Check owner
+  if not pwd.getpwuid(os.stat(config["location"]).st_uid).pw_name == config["owner"]:
+    return True
+  #Check group
+  if not pwd.getpwuid(os.stat(config["location"]).st_gid).pw_name == config["group"]:
+    return True
+  #Check content
+  with open(config["location"], 'r') as toread:
+    content = toread.read()
+  if not content == config["content"]:
+    return True
+
+  return False
 
 def install_file(config):
-  print "install file"
+  if file_needs_changing(config):
+    with open(config["location"], 'w') as f:
+      f.write(config["content"])
+    os.chown(config["location"], pwd.getpwnam(config["owner"]).pw_uid, 
+             grp.getgrnam(config["group"]).gr_gid)
+    if "restarts" in config:
+      restart_service(config["restarts"])
 
 def destroy_file(config):
-  print "destroy file"
+  if os.path.isfile(config["location"]):
+    os.remove(config["location"])
 
 if __name__ == '__main__':
     entry()
