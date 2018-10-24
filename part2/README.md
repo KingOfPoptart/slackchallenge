@@ -27,7 +27,7 @@ pip install .
 slacksible --conf configuration.yml --apply
 
 # To de-provision your machine
-slacksible --conf ./phpapp.yml --destroy
+slacksible --conf configuration.yml --destroy
 ```
 
 ---
