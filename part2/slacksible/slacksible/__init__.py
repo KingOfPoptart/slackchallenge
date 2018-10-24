@@ -94,4 +94,4 @@ def destroy_file(config):
     os.remove(config["location"])
 
 if __name__ == '__main__':
-    entry()
+  entry()
