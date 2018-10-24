@@ -29,7 +29,8 @@ def entry(conf, apply):
 def pkg_exists(name):
   """Returns true if package is installed, false otherwise"""
   try:
-     subprocess.check_call(["dpkg", "-l", name])
+     devnull = open(os.devnull, 'w')
+     subprocess.check_call(["dpkg", "-l", name], stdout=devnull, stderr=devnull)
      return True
   except subprocess.CalledProcessError:
     return False
