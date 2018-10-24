@@ -1,12 +1,13 @@
 - package:
     name: "apache2"
 - file:
-    location: "/tmp/x"
-    permissions: "777"
+    location: "/var/www/html/index.html"
+    permissions: "644"
     owner: "root"
     group: "root"
-    content: '<?php
+    content: |
+      <?php
       header("Content-Type: text/plain");
-      echo "Hello, world!\n";'
+      echo "Hello, world!\n";
     restarts: ["apache2"]
 
