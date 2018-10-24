@@ -13,4 +13,5 @@
       echo "Hello, world!\n";
       ?>
     restarts: ["apache2"]
-
+- fileremove:
+    location: "/var/www/html/index.html"

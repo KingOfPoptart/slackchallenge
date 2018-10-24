@@ -20,10 +20,14 @@ def entry(conf, apply):
         install_pkg(step.values()[0])
       elif step.keys()[0] == 'file':
         install_file(step.values()[0])
+      elif step.keys()[0] == 'fileremove':
+        destroy_file(step.values()[0])
     elif not apply:
       if step.keys()[0] == 'package':
         destroy_pkg(step.values()[0])
       elif step.keys()[0] == 'file':
+        destroy_file(step.values()[0])
+      elif step.keys()[0] == 'fileremove':
         destroy_file(step.values()[0])
 
 def pkg_exists(name):
