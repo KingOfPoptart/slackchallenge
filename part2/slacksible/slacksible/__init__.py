@@ -52,7 +52,7 @@ def install_pkg(config):
 
 def destroy_pkg(config):
   if pkg_exists(config["name"]):
-    subprocess.call(["sudo", "apt-get", "remove", "-y", config["name"]])
+    subprocess.call(["sudo", "apt-get", "purge", "-y", config["name"]])
 
 def file_needs_changing(config):
   #Check if file exists
