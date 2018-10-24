@@ -1,7 +1,9 @@
 - package:
     name: "apache2"
+- package:
+    name: "libapache2-mod-php5"
 - file:
-    location: "/var/www/html/index.html"
+    location: "/var/www/html/index.php"
     permissions: "644"
     owner: "root"
     group: "root"
@@ -9,5 +11,6 @@
       <?php
       header("Content-Type: text/plain");
       echo "Hello, world!\n";
+      ?>
     restarts: ["apache2"]
 
