@@ -35,9 +35,16 @@ def pkg_exists(name):
   except subprocess.CalledProcessError:
     return False
 
+def service_exists(name):
+  """Returns true if service exists, false otherwise"""
+  if subprocess.check_output(["service", "--status-all"], stderr=subprocess.STDOUT).find(name) < 0:
+    return False
+  return True
+
 def restart_service(names):
   for name in names:
-    subprocess.call(["sudo", "service", name, "restart"])
+    if service_exists(name):
+      subprocess.call(["sudo", "service", name, "restart"])
 
 def install_pkg(config):
   if not pkg_exists(config["name"]):
