@@ -1,9 +1,0 @@
-slacksible/__init__.py
-slacksible/commandline.py
-slacksible.egg-info/PKG-INFO
-slacksible.egg-info/SOURCES.txt
-slacksible.egg-info/dependency_links.txt
-slacksible.egg-info/entry_points.txt
-slacksible.egg-info/not-zip-safe
-slacksible.egg-info/requires.txt
-slacksible.egg-info/top_level.txt
