@@ -74,6 +74,7 @@ def install_file(config):
       f.write(config["content"])
     os.chown(config["location"], pwd.getpwnam(config["owner"]).pw_uid, 
              grp.getgrnam(config["group"]).gr_gid)
+    os.chmod(config["location"], int(config["permissions"], 8))
     if "restarts" in config:
       restart_service(config["restarts"])
 
