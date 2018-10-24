@@ -3,8 +3,9 @@ import yaml
 import os
 import pwd
 import grp
+import subprocess
 from stat import *
-from subprocess import call, check_output
+
 
 @click.command()
 @click.option("--conf", help="Config file to read in", required=True)
@@ -27,19 +28,23 @@ def entry(conf, apply):
 
 def pkg_exists(name):
   """Returns true if package is installed, false otherwise"""
-  return not check_output(["apt", "-qq", "list", name]) == ""
+  try:
+     subprocess.check_call(["dpkg", "-l", name])
+     return True
+  except subprocess.CalledProcessError:
+    return False
 
 def restart_service(names):
   for name in names:
-    call(["sudo", "service", name, "restart"])
+    subprocess.call(["sudo", "service", name, "restart"])
 
 def install_pkg(config):
   if not pkg_exists(config["name"]):
-    call(["sudo", "apt-get", "install", "-y", config["name"]])
+    subprocess.call(["sudo", "apt-get", "install", "-y", config["name"]])
 
 def destroy_pkg(config):
   if pkg_exists(config["name"]):
-    call(["sudo", "apt-get", "remove", "-y", config["name"]])
+    subprocess.call(["sudo", "apt-get", "remove", "-y", config["name"]])
 
 def file_needs_changing(config):
   #Check if file exists
